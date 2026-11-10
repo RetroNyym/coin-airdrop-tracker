@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>CoinBot - Coin Veren Siteler</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #0e1117; color: #e6e6e6; }
+  header { background: #161b22; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; }
+  h1 { font-size: 20px; margin: 0; }
+  h1 span { color: #58a6ff; }
+  .bar { padding: 12px 22px; background: #0e1117; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  input, select, button { background: #161b22; color: #e6e6e6; border: 1px solid #30363d; border-radius: 6px; padding: 7px 12px; font-size: 14px; }
+  button { cursor: pointer; }
+  button:hover { border-color: #58a6ff; }
+  table { width: calc(100% - 44px); margin: 12px 22px; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+  th { background: #161b22; color: #8b949e; position: sticky; top: 0; }
+  tr:hover td { background: #161b22; }
+  .score { font-weight: bold; }
+  .ok    { color: #3fb950; } .mid  { color: #d29922; } .low { color: #f0883e; } .bad { color: #f85149; }
+  .cat   { padding: 3px 10px; border-radius: 12px; font-size: 12px; }
+  .cat-ok{ background: #1f3a26; color: #3fb950; } .cat-mid { background: #3a2f1a; color: #d29922; }
+  .cat-low{ background: #3a281d; color: #f0883e; } .cat-bad { background: #3a1d1f; color: #f85149; }
+  a { color: #58a6ff; text-decoration: none; } a:hover { text-decoration: underline; }
+  .hint { color: #8b949e; font-size: 12px; padding: 0 22px; }
+</style>
+<meta http-equiv="refresh" content="60">
+</head>
+<body>
+<header>
+  <h1>🪙 Coin<span>Bot</span> — Coin Veren Siteler & Güven Puanı</h1>
+  <nav style="display:flex;gap:6px">
+    <a href="/" style="background:#1f2b3a;border-radius:6px;padding:6px 12px;color:#58a6ff">Güven Panosu</a>
+    <a href="/drops" style="color:#8b949e;padding:6px 12px">Airdrop Listesi</a>
+  </nav>
+  <div>Guven puani taranmaya devam ediyor, guncel veriler her 60 sn yenilenir</div>
+</header>
+
+<div class="bar">
+  <form method="get" style="display:flex;gap:10px;flex-wrap:wrap">
+    <input type="text" name="q" value="{{ q }}" placeholder="ara: coin, borsa, URL...">
+    <select name="cat">
+      <option value="">Kategori: Hepsi</option>
+      {% for c in cats %}<option value="{{ c }}" {{ 'selected' if cat==c }}>{{ c }}</option>{% endfor %}
+    </select>
+    <select name="order">
+      <option value="score" {{ 'selected' if order=='score' }}>Sayfa: guven puanina gore (yuksek → dusuk)</option>
+      <option value="fresh" {{ 'selected' if order=='fresh' }}>Yeni bulunanlar once</option>
+      <option value="name"  {{ 'selected' if order=='name' }}>Alfabetik</option>
+    </select>
+    <button type="submit">Filtrele</button>
+  </form>
+  <span class="hint">{{ coins|length }} kayit gosteriliyor</span>
+</div>
+
+<table>
+  <tr>
+    <th>Coin / Airdrop</th>
+    <th>Kaynak</th>
+    <th>Guven %</th>
+    <th>Kategori</th>
+    <th>Reward / Miktar</th>
+    <th>Borsa</th>
+    <th>Kontrat</th>
+    <th>Bulunma</th>
+    <th>Detay</th>
+  </tr>
+  {% for k in coins %}
+  <tr>
+    <td><a href="/coin/{{ k.id }}">{{ k.name or '(isimsiz)' }}</a></td>
+    <td>{{ k.source }}</td>
+    <td class="score {{ 'ok' if k.score>=75 else 'mid' if k.score>=55 else 'low' if k.score>=35 else 'bad' }}">{{ k.score }}%</td>
+    <td><span class="cat {{ 'cat-ok' if k.score>=75 else 'cat-mid' if k.score>=55 else 'cat-low' if k.score>=35 else 'cat-bad' }}">{{ k.category }}</span></td>
+    <td>{{ k.reward or '—' }}</td>
+    <td>{{ k.exchange or '—' }}</td>
+    <td style="font-family:monospace;font-size:12px">{{ (k.contract or '—')[:12] }}{% if k.contract %}...{% endif %}</td>
+    <td style="font-size:12px">{{ k.first_seen | topic_ts }}</td>
+    <td><a href="{{ k.url }}" target="_blank" rel="noopener">site ↗</a></td>
+  </tr>
+  {% else %}
+  <tr><td colspan="9">Henuz kayit yok; ilk tarama biraz serebilir (bot arkada calisiyor).</td></tr>
+  {% endfor %}
+</table>
+
+<p class="hint">Puan faktorleri: kontrat paylasimi • sosyal medya aktifligi • borsa listed • audit/KYC • detay netligi • ucret durumu. Townshipdeki agirliklarin detayi icin config.py dosyasina bak.</p>
+</body>
+</html>

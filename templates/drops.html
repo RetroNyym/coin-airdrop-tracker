@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Airdrop & Drop Listesi - CoinBot</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #0e1117; color: #e6e6e6; }
+  header { background: #161b22; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; }
+  h1 { font-size: 20px; margin: 0; } h1 span { color: #58a6ff; }
+  nav a { color: #8b949e; text-decoration: none; padding: 6px 12px; border-radius: 6px; }
+  nav a:hover { color: #e6e6e6; background: #21262d; } nav a.active { color: #58a6ff; background: #1f2b3a; }
+  .bar { padding: 12px 22px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  input, select, button { background: #161b22; color: #e6e6e6; border: 1px solid #30363d; border-radius: 6px; padding: 7px 12px; font-size: 14px; }
+  .stat { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 8px 16px; font-size: 13px; }
+  .stat b { font-size: 18px; }
+  table { width: calc(100% - 44px); margin: 12px 22px; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #21262d; }
+  th { background: #161b22; color: #8b949e; position: sticky; top: 0; }
+  tr:hover td { background: #161b22; }
+  a { color: #58a6ff; text-decoration: none; } a:hover { text-decoration: underline; }
+  .on   { color: #3fb950; font-weight: bold; }
+  .off  { color: #8b949e; }
+  .ok   { color: #3fb950; } .mid { color: #d29922; } .low { color: #f0883e; } .bad { color: #f85149; }
+  .cat { padding: 3px 10px; border-radius: 12px; font-size: 12px; }
+  .cat-ok{ background: #1f3a26; color: #3fb950; } .cat-mid { background: #3a2f1a; color: #d29922; }
+  .cat-low{ background: #3a281d; color: #f0883e; } .cat-bad { background: #3a1d1f; color: #f85149; }
+  .tag { display: inline-block; padding: 2px 8px; margin: 1px; border-radius: 8px; font-size: 11px; background: #21262d; color: #e6e6e6; }
+  .tag.warn { background: #3a1d1f; color: #f85149; }
+  .hint { color: #8b949e; font-size: 12px; padding: 0 22px; }
+</style>
+<meta http-equiv="refresh" content="60">
+</head>
+<body>
+<header>
+  <h1>🪙 Coin<span>Bot</span> — Drop & Airdrop Listesi</h1>
+  <nav>
+    <a href="/">Güven Panosu</a>
+    <a href="/drops" class="active">Airdrop Listesi</a>
+  </nav>
+</header>
+
+<div class="bar">
+  <div class="stat"><b>{{ stats.aktif }}</b> Aktif</div>
+  <div class="stat"><b>{{ stats.bitti }}</b> Bitmiş</div>
+  <div class="stat"><b>{{ stats.toplam }}</b> Toplam</div>
+  <form method="get" style="display:flex;gap:10px;flex-wrap:wrap">
+    <input type="text" name="q" value="{{ q }}" placeholder="ara: coin, borsa, kaynak...">
+    <select name="status">
+      <option value="">Durum: Hepsi</option>
+      <option value="Aktif" {{ 'selected' if status=='Aktif' }}>Aktif</option>
+      <option value="Bitti" {{ 'selected' if status=='Bitti' }}>Bitmiş</option>
+    </select>
+    <select name="source">
+      <option value="">Kaynak: Hepsi</option>
+      {% for s in sources %}<option value="{{ s }}" {{ 'selected' if source==s }}>{{ s }}</option>{% endfor %}
+    </select>
+    <select name="order">
+      <option value="fresh" {{ 'selected' if order=='fresh' }}>Yeni bulunanlar önce</option>
+      <option value="score" {{ 'selected' if order=='score' }}>Güven puanına göre</option>
+      <option value="name"  {{ 'selected' if order=='name' }}>Alfabetik</option>
+    </select>
+    <button type="submit">Filtrele</button>
+  </form>
+</div>
+
+<table>
+  <tr>
+    <th>Airdrop / Proje</th>
+    <th>Durum</th>
+    <th>Reward</th>
+    <th>Kaynak</th>
+    <th>Bulunma</th>
+    <th>Borsa</th>
+    <th>Fiyat / Güven</th>
+    <th>Bayraklar</th>
+    <th>Detay</th>
+  </tr>
+  {% for k in coins %}
+  <tr>
+    <td><a href="/coin/{{ k.id }}">{{ k.name or '(isimsiz)' }}</a></td>
+    <td class="{{ 'on' if k.status=='Aktif' else 'off' }}">{{ k.status or '—' }}</td>
+    <td>{{ k.reward or '—' }}</td>
+    <td>{{ k.source }}</td>
+    <td style="font-size:12px">{{ k.first_seen | topic_ts }}</td>
+    <td>{{ k.exchange or '—' }}</td>
+    <td>
+      <span class="cat {{ 'cat-ok' if k.score>=75 else 'cat-mid' if k.score>=55 else 'cat-low' if k.score>=35 else 'cat-bad' }}">{{ k.category }}</span>
+    </td>
+    <td>
+      {% set fl = k.flags | from_json %}
+      {% if fl.get('paid') %}<span class="tag warn">ÜCRET İSTİYOR</span>{% endif %}
+      {% if fl.get('kyc') %}<span class="tag">KYC</span>{% endif %}
+      {% if fl.get('audit') %}<span class="tag">AUDIT</span>{% endif %}
+    </td>
+    <td><a href="{{ k.url }}" target="_blank" rel="noopener">site ↗</a></td>
+  </tr>
+  {% else %}
+  <tr><td colspan="9">Kriterlere uyan drop bulunamadı.</td></tr>
+  {% endfor %}
+</table>
+
+<p class="hint">Bu liste her taramada güncellenir: airdrops.io, gemdrops.io, alphadrops.net, defillama.com ve coingabbar.com kaynakları izlenir.</p>
+</body>
+</html>

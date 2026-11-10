@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>{{ coin.name or 'Detay' }} - CoinBot</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #0e1117; color: #e6e6e6; }
+  header { background: #161b22; padding: 14px 22px; }
+  h1 { font-size: 20px; margin: 0 0 6px; }
+  a { color: #58a6ff; text-decoration: none; }
+  main { padding: 22px; max-width: 900px; margin: 0 auto; }
+  .card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; }
+  .row { display: grid; grid-template-columns: 160px 1fr; gap: 10px; margin: 4px 0; }
+  .k { color: #8b949e; }
+  .score-big { font-size: 40px; font-weight: bold; }
+  .ok { color: #3fb950; } .mid { color: #d29922; } .low { color: #f0883e; } .bad { color: #f85149; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  code { background: #21262d; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  .flag { display: inline-block; background: #21262d; padding: 3px 10px; margin: 2px; border-radius: 10px; font-size: 12px; }
+  .flag.on { background: #1f3a26; color: #3fb950; }
+  .flag.warn { background: #3a1d1f; color: #f85149; }
+</style>
+</head>
+<body>
+<header><a href="/">← Panelde geri don</a> &nbsp; <a href="/drops">Airdrop Listesi →</a></header>
+<main>
+  <div class="card">
+    <h1>{{ coin.name or '(isimsiz coin)' }}</h1>
+    <div class="row"><div class="k">Detay sayfasi</div><div><a href="{{ coin.url }}" target="_blank" rel="noopener">{{ coin.url }}</a></div></div>
+    <div class="row"><div class="k">Kaynak site</div><div>{{ coin.source }}</div></div>
+    <div class="row"><div class="k">Ilk bulundu / son guncel</div><div>{{ coin.first_seen|topic_ts }} / {{ coin.last_updated|topic_ts }}</div></div>
+  </div>
+
+  <div class="card">
+    <div class="score-big {{ 'ok' if coin.score>=75 else 'mid' if coin.score>=55 else 'low' if coin.score>=35 else 'bad' }}">{{ coin.score }}%</div>
+    <div><b>{{ coin.category }}</b> — faktor bazli guven puani</div>
+  </div>
+
+  <div class="card">
+    <h3>Nasil alinir / Nasil katilinir?</h3>
+    {% for step in coin.how_to.split('|') if step.strip() %}
+      {{ step.strip() }}<br>
+    {% else %}
+      Detay sayfasindan adim bilgisi cikartilamadi. Sayfayi acip incele.
+    {% endfor %}
+  </div>
+
+  <div class="card">
+    <div class="row"><div class="k">Reward / miktar</div><div>{{ coin.reward or '—' }}</div></div>
+    <div class="row"><div class="k">Gecerli borsa / platformlar</div><div>{{ coin.exchange or '—' }}</div></div>
+    <div class="row"><div class="k">Kontrat adresi</div><div><code>{{ coin.contract or '—' }}</code></div></div>
+    <div class="row">
+      <div class="k">Sosyal linkler</div>
+      <div>
+        {% for s in (coin.socials and (coin.socials | from_json)) or [] %}
+          <a href="{{ s }}" target="_blank" rel="noopener">{{ s }}</a><br>
+        {% else %}—{% endfor %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="k">Bayraklar</div>
+      <div>
+        {% for key, label in [('kyc','KYC gerekli'), ('paid','Ucret istiyor'), ('audit','Audit var'), ('deadline','Son tarih belirtmis')] %}
+          {% set on = (coin.flags and (coin.flags | from_json)) or {} %}
+          <span class="flag {{ 'on' if on.get(key) else 'warn' if key=='paid' and not on.get(key) }}">{{ label }}{{ ' ✔' if on.get(key) }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="card"><b>Uyari:</b> Bu puan otomatik tahminidir. Her coin'e kimlik bilgi girmeden ve cekilmeden (deposit) once ozel arastirma (DYOR) yapin.</div>
+</main>
+</body>
+</html>

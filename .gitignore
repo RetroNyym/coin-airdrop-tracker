@@ -1,0 +1,13 @@
+# veritabani (kisisel cikti paylasilmaz)
+coinbot.db
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# editor/OS
+.vscode/
+.idea/
+Thumbs.db
