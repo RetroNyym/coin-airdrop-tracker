@@ -54,6 +54,10 @@
       <option value="">Kaynak: Hepsi</option>
       {% for s in sources %}<option value="{{ s }}" {{ 'selected' if source==s }}>{{ s }}</option>{% endfor %}
     </select>
+    <select name="cat">
+      <option value="">Kategori: Hepsi</option>
+      {% for c in cats %}<option value="{{ c }}" {{ 'selected' if cat==c }}>{{ c }}</option>{% endfor %}
+    </select>
     <select name="order">
       <option value="fresh" {{ 'selected' if order=='fresh' }}>Yeni bulunanlar önce</option>
       <option value="score" {{ 'selected' if order=='score' }}>Güven puanına göre</option>

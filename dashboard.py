@@ -77,6 +77,9 @@ def build_app():
                                        status=f["status"] or None,
                                        source=f["source"] or None)
             src_list = database.sources(c)
+        # kategori filtresi (Guven Panosu ile ayni davranis)
+        if f["cat"]:
+            coins = [k for k in coins if k["category"] == f["cat"]]
         ctx = ortak(f, coins)
         ctx["sources"] = src_list
         return render_template("drops.html", coins=coins, **ctx)

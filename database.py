@@ -75,7 +75,13 @@ def upsert_coin(c, rec):
 
 def all_coins(c, order="score", status=None, source=None, q=None):
     """Filtreler: durum (Aktif/Bitti), kaynak site, ad/url/borsa aramasi."""
-    order_sql = {"score": "score DESC", "fresh": "first_seen DESC", "name": "name ASC"}
+    # beraberlikleri kiracak ikincil siralama: ayni puandaki kayitlar her
+    # yenilemede yer degistirmesin (kullanici 'siralama uygulanmiyor' sanir)
+    order_sql = {
+        "score": "score DESC, name ASC, id ASC",
+        "fresh": "first_seen DESC, id DESC",
+        "name": "name ASC, id ASC",
+    }
     sql = "SELECT * FROM coins WHERE 1=1"
     args = []
     if status:
