@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<!-- SEO: baslik ana anahtar kelimeleri icerir (60 karakter civari) -->
+<title>CoinBot — Crypto Airdrop Tracker & Trust Score Dashboard</title>
+<meta name="description" content="CoinBot scans crypto airdrop listing sites, scrapes every drop's detail page (reward, exchange, contract) and scores each coin with a 0-100 trust score. Free, open-source Python + Flask dashboard.">
+<meta name="keywords" content="crypto airdrop tracker, airdrop list, free crypto airdrops, airdrop scanner, trust score, coin airdrop, kripto airdrop, airdrop tarayici, airdrop listesi, guven puani, web scraping, python flask">
+<meta name="author" content="RetroNyym">
+<meta name="robots" content="index, follow">
+<!-- Canonical + Open Graph + Twitter -->
+<link rel="canonical" href="https://retronyym.github.io/coin-airdrop-tracker/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CoinBot — Crypto Airdrop Tracker & Trust Score Dashboard">
+<meta property="og:description" content="Scans airdrop sites, scrapes reward/exchange/contract details, scores every coin 0-100 for trust. Open-source Python dashboard.">
+<meta property="og:url" content="https://retronyym.github.io/coin-airdrop-tracker/">
+<meta property="og:image" content="https://retronyym.github.io/coin-airdrop-tracker/assets/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CoinBot — Crypto Airdrop Tracker & Trust Score">
+<meta name="twitter:description" content="Free open-source crypto airdrop tracker with 0-100 trust scoring dashboard.">
+<meta name="twitter:image" content="https://retronyym.github.io/coin-airdrop-tracker/assets/banner.png">
+
+<!-- JSON-LD yapilandirilmis veri: Google'da zengin sonuc icin -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CoinBot",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Crypto airdrop tracker that scans listing sites, scrapes drop details (reward, exchange, contract address) and rates every coin with a factor-based 0-100 trust score.",
+  "url": "https://retronyym.github.io/coin-airdrop-tracker/",
+  "downloadUrl": "https://github.com/RetroNyym/coin-airdrop-tracker",
+  "author": {"@type": "Person", "name": "RetroNyym"},
+  "license": "https://opensource.org/licenses/MIT",
+  "keywords": "crypto airdrop tracker, airdrop list, trust score, airdrop scanner, python flask"
+}
+</script>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #0e1117; color: #e6e6e6; }
+  header { background: #161b22; padding: 30px 20px; text-align: center; }
+  h1 { font-size: 34px; margin: 0 0 8px; } h1 span { color: #58a6ff; }
+  .sub { color: #8b949e; max-width: 720px; margin: 0 auto; font-size: 17px; line-height: 1.5; }
+  main { max-width: 880px; margin: 0 auto; padding: 30px 20px; }
+  .btn { display: inline-block; background: #238636; color: #fff; padding: 12px 26px; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 8px 6px; }
+  .btn.ghost { background: #21262d; border: 1px solid #30363d; color: #e6e6e6; }
+  .banner { width: 100%; border-radius: 12px; border: 1px solid #21262d; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 26px 0; }
+  .card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 18px 20px; }
+  .card h3 { margin: 0 0 8px; color: #58a6ff; font-size: 16px; }
+  .card p { margin: 0; color: #b6bcc4; font-size: 14px; line-height: 1.5; }
+  code { background: #21262d; padding: 3px 8px; border-radius: 6px; font-size: 14px; }
+  pre { background: #161b22; border: 1px solid #21262d; padding: 14px 18px; border-radius: 8px; overflow-x: auto; }
+  h2 { border-bottom: 1px solid #21262d; padding-bottom: 8px; }
+  footer { text-align: center; color: #8b949e; font-size: 13px; padding: 24px; border-top: 1px solid #21262d; }
+  a { color: #58a6ff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🪙 Coin<span>Bot</span></h1>
+  <div class="sub">Crypto airdrop sitelerini tarar, her drop'un detayını çıkarır ve
+  her coine <b>0-100 güven puanı</b> verir. Ücretsiz ve açık kaynak — Python + Flask.</div>
+  <div style="margin-top:14px">
+    <a class="btn" href="https://github.com/RetroNyym/coin-airdrop-tracker">⭐ GitHub'da İncele</a>
+    <a class="btn ghost" href="https://github.com/RetroNyym/coin-airdrop-tracker/archive/refs/heads/main.zip">İndir (ZIP)</a>
+  </div>
+</header>
+<main>
+  <img class="banner" src="assets/banner.png" alt="CoinBot airdrop tracker dashboard ekran görüntüsü">
+
+  <div class="grid">
+    <div class="card"><h3>🔎 Otomatik Tarama</h3><p>airdrops.io, gemdrops.io, alphadrops.net, defillama.com ve coingabbar.com'yu 30 dakikada bir tarar; her coinin detay sayfasına girer.</p></div>
+    <div class="card"><h3>📊 Güven Puanı (%0-100)</h3><p>Kontrat paylaşımı, borsa bağlantısı, audit, sosyal aktivite, ücret talebi gibi faktörlerle faktör bazlı puan ve kategori.</p></div>
+    <div class="card"><h3>🪂 Drop Detayları</h3><p>Reward miktarı, hangi borsa (Binance, Bybit, KuCoin...), katılım adımları, 0x kontrat adresi, KYC/ücret uyarıları.</p></div>
+    <div class="card"><h3>🖥️ Canlı Dashboard</h3><p>Aktif/Bitmiş durumu, kaynak ve kategori filtreleri, puan sıralaması, JSON API — hepsi localhost'ta.</p></div>
+  </div>
+
+  <h2>Hızlı Başlangıç</h2>
+  <pre>git clone https://github.com/RetroNyym/coin-airdrop-tracker.git
+cd coin-airdrop-tracker
+pip install -r requirements.txt
+python dashboard.py</pre>
+  <p>Pano otomatik açılır: <code>http://127.0.0.1:8787</code></p>
+
+  <h2>Neden CoinBot?</h2>
+  <p>Çoğu "airdrop listesi" sitesi reklam doludur ve riskli projeleri seçemezsiniz.
+  CoinBot listeleri otomatik toplar, her drop'u yapılandırılmış veriye çevirir ve
+  şeffaf bir faktör bazlı güven puanı ile sıralar — böylece <b>hangi airdropan
+  değerli, hangisi riskli</b> sorusuna tek ekranda cevap alırsınız. Puanlama mantığı
+  tamamen açık kaynak ve <code>config.py</code> üzerinden özelleştirilebilir.</p>
+
+  <p><b>Uyarı:</b> Puanlar otomatik tahmindir, yatırım tavsiyesi değildir. Kendi
+  araştırmanızı yapın (DYOR).</p>
+</main>
+<footer>
+  CoinBot — open-source crypto airdrop tracker & trust score dashboard ·
+  <a href="https://github.com/RetroNyym/coin-airdrop-tracker">GitHub</a> · MIT License
+</footer>
+</body>
+</html>
